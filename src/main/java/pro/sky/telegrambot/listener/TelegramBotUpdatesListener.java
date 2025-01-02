@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import pro.sky.telegrambot.Entity.ChatEntity;
 import pro.sky.telegrambot.Entity.MessageDigit;
 import pro.sky.telegrambot.Service.ChatService;
+
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,7 +45,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         updates.forEach(update -> {
             if (update.message() != null) {
                 SendMessage messageNew;
-                messageNew=new SendMessage(update.message().chat().id(),writeTextMessage(update))
+                messageNew = new SendMessage(update.message().chat().id(), writeTextMessage(update))
                         .parseMode(ParseMode.Markdown);
                 SendResponse response = telegramBot.execute(messageNew);
             }
@@ -98,9 +99,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
         return null;
     }
-    private String writeTextMessage(Update update){
+
+    private String writeTextMessage(Update update) {
         String textSendMessage;
-        String textMessage=update.message().text();
+        String textMessage = update.message().text();
         if (textMessage.equals("/start")) {
             textSendMessage = "Привет, " + update.message().from().firstName()
                     + ". Рад познакомиться! Меня зовут Юстас.\n" +
@@ -111,7 +113,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             if (exstractDataTimeFromText(update.message().text()) != null) {
                 String message = "";
                 message = exstractDataTimeFromText(update.message().text()).getMessageText();
-               textSendMessage= " Я напомню Вам " + exstractDataTimeFromText(update.message().text()).getLocalDateTime() +
+                textSendMessage = " Я напомню Вам " + exstractDataTimeFromText(update.message().text()).getLocalDateTime() +
                         " " + message;
                 ChatEntity request = new ChatEntity();
                 request.setDataMessage(exstractDataTimeFromText(update.message().text())
@@ -122,12 +124,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 request.setNameUser(update.message().from().firstName());
                 chatService.saveChat(request);
             } else {
-               textSendMessage= update.message().from().firstName() +
+                textSendMessage = update.message().from().firstName() +
                         ", введите, пожалуйста, команду в формате:\n" +
                         "Напомни дд.мм.гггг чч:мм текст";
             }
         } else {
-           textSendMessage=
+            textSendMessage =
                     update.message().from().firstName() + ", я могу Вам напомнить о какой-то задаче.\n" +
                             "Укажите дату, время и текс самой задачу в формате: \n\n" + "\"дд.мм.гггг чч:мм текст задачи\"\n\n" +
                             " без кавычек. \n Например:\n\n Напомни 12.12.2222 15:02 прогуляться по улицам Марса\n\n" +
