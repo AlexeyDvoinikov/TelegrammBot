@@ -24,7 +24,7 @@ public class SheduledTask {
     @Autowired
     private TelegramBot telegramBot;
     SendMessage message = null;
-    Boolean dateTimeX=false;
+    Boolean dateTimeX = false;
 
     List<ChatEntity> chatEntityList;
 
@@ -32,14 +32,14 @@ public class SheduledTask {
     public void performTask() {
         chatEntityList = chatService.getListChat();
         for (ChatEntity chat : chatEntityList) {
-            dateTimeX=LocalDateTime.now().isAfter(chat.getDataMessage());
+            dateTimeX = LocalDateTime.now().isAfter(chat.getDataMessage());
             if (dateTimeX) {
                 message = new SendMessage(chat.getChatId()
-                        , chat.getNameUser()+", Вы просили меня напомнить Вам "
+                        , chat.getNameUser() + ", Вы просили меня напомнить Вам "
                         + chat.getTextChat()).parseMode(ParseMode.Markdown);
                 SendResponse response = telegramBot.execute(message);
                 chat.setCompleted(true);
-                logger.info("Задача Shduller: "+chat.getChatId()+" "+chat.getNameUser()+" "+chat.getTextChat());
+                logger.info("Задача Shduller: " + chat.getChatId() + " " + chat.getNameUser() + " " + chat.getTextChat());
                 chatService.saveChat(chat);
             }
 
